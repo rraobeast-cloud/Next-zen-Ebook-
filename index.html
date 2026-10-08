@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Next Zen Ebook</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #00adb5;
+            --text-color: #f8fafc;
+            --beast-color: #ff4757;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .screen {
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .active {
+            display: flex;
+        }
+
+        .header-info {
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .book-container {
+            perspective: 1000px;
+            margin: 20px 0;
+        }
+
+        .book-3d {
+            width: 260px;
+            height: 360px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s ease-in-out;
+            box-shadow: 0 20px 30px rgba(0,0,0,0.5);
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .book-3d img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .book-3d.flipped {
+            transform: rotateY(-180deg);
+        }
+
+        .btn {
+            background-color: var(--accent-color);
+            color: #fff;
+            padding: 12px 24px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 10px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: scale(1.03);
+        }
+
+        .btn-beast {
+            background-color: var(--beast-color);
+        }
+
+        .grid-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .card-item {
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: #fff;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .content-box {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: left;
+            width: 100%;
+            margin-top: 15px;
+            line-height: 1.6;
+        }
+
+        .instruction-text {
+            margin: 15px 0;
+            font-size: 0.95rem;
+            color: #cbd5e1;
+        }
+
+        .beast-badge {
+            background: var(--beast-color);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SCREEN 1: HOME COVER -->
+    <div id="screen1" class="screen active">
+        <button class="btn" onclick="goToScreen('screen2')">If you want to open this book please click here</button>
+        <div class="book-container">
+            <div class="book-3d" id="coverBook1">
+                <img src="cover.jpg" alt="Next Zen Ebook Cover">
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: INSTRUCTIONS & AUDIO -->
+    <div id="screen2" class="screen">
+        <button class="btn" onclick="speakInstructions()">🔊 Listen Audio</button>
+        
+        <div class="book-container" onclick="flipBook('coverBook2')">
+            <div class="book-3d" id="coverBook2">
+                <img src="cover.jpg" alt="Ebook Cover">
+            </div>
+        </div>
+
+        <p class="instruction-text">
+            If you want to turn pages or open the e-book, flip the page anti-clockwise every time. To turn any page or open the book, do it on your screen just like in real life.
+        </p>
+
+        <button class="btn" onclick="goToScreen('screen1')">⬅ Back</button>
+        <button class="btn" onclick="goToScreen('screen3')">Continue ➡</button>
+    </div>
+
+    <!-- SCREEN 3: SUBJECT SELECTION -->
+    <div id="screen3" class="screen">
+        <h2>Select Subject</h2>
+        <div class="grid-selection">
+            <div class="card-item"><span>Social Science</span><button class="btn" onclick="selectSubject('Social Science')">Select</button></div>
+            <div class="card-item"><span>English</span><button class="btn" onclick="selectSubject('English')">Select</button></div>
+            <div class="card-item"><span>English Grammar</span><button class="btn" onclick="selectSubject('English Grammar')">Select</button></div>
+            <div class="card-item"><span>Hindi</span><button class="btn" onclick="selectSubject('Hindi')">Select</button></div>
+            <div class="card-item"><span>Physics</span><button class="btn" onclick="selectSubject('Physics')">Select</button></div>
+            <div class="card-item"><span>Biology</span><button class="btn" onclick="selectSubject('Biology')">Select</button></div>
+            <div class="card-item"><span>Chemistry</span><button class="btn" onclick="selectSubject('Chemistry')">Select</button></div>
+            <div class="card-item"><span>Mathematics</span><button class="btn" onclick="selectSubject('Mathematics')">Select</button></div>
+        </div>
+    </div>
+
+    <!-- SCREEN 4: CLASS SELECTION -->
+    <div id="screen4" class="screen">
+        <div class="header-info" id="subHeader">Subject: </div>
+        <div class="book-container" onclick="flipBook('coverBook3')">
+            <div class="book-3d" id="coverBook3">
+                <img src="cover.jpg" alt="Ebook Cover">
+            </div>
+        </div>
+        <h2>Select Class</h2>
+        <div class="grid-selection">
+            <div class="card-item"><span>Class 12th</span><button class="btn" onclick="selectClass('Class 12th')">Select</button></div>
+            <div class="card-item"><span>Class 11th</span><button class="btn" onclick="selectClass('Class 11th')">Select</button></div>
+            <div class="card-item"><span>Class 10th</span><button class="btn" onclick="selectClass('Class 10th')">Select</button></div>
+            <div class="card-item"><span>Class 9th</span><button class="btn" onclick="selectClass('Class 9th')">Select</button></div>
+            <div class="card-item"><span>Class 8th</span><button class="btn" onclick="selectClass('Class 8th')">Select</button></div>
+            <div class="card-item"><span>Class 7th</span><button class="btn" onclick="selectClass('Class 7th')">Select</button></div>
+            <div class="card-item"><span>Class 6th</span><button class="btn" onclick="selectClass('Class 6th')">Select</button></div>
+        </div>
+    </div>
+
+    <!-- SCREEN 5: CHEAT CODE & BOOK OPENING -->
+    <div id="screen5" class="screen">
+        <div class="header-info" id="fullHeader">Subject - Class</div>
+        
+        <div class="book-container" onclick="flipBook('coverBook4')">
+            <div class="book-3d" id="coverBook4">
+                <img src="cover.jpg" alt="Ebook Cover">
+            </div>
+        </div>
+
+        <input type="text" id="cheatCodeInput" placeholder="Enter Cheat Code Here">
+        <button class="btn btn-beast" onclick="activateCheatCode()">Activate Beast Mode</button>
+
+        <p class="instruction-text">
+            If you want to activate special mode or beast mode of this book, enter one of the cheat codes shared on YouTube and Instagram here. Your Beast Mode will turn on and you will get an amazingly awesome detailed book experience!
+        </p>
+
+        <button class="btn" onclick="loadContent(false)">Open Standard Book ➡</button>
+    </div>
+
+    <!-- SCREEN 6: TOPIC & CONTENT DISPLAY -->
+    <div id="screen6" class="screen">
+        <div class="header-info" id="finalHeader">Subject - Class</div>
+        <div id="beastBadgeContainer"></div>
+
+        <div class="content-box" id="topicContent">
+            <!-- Content dynamic -->
+        </div>
+
+        <button class="btn" onclick="goToScreen('screen3')" style="margin-top: 20px;">Choose Another Subject</button>
+    </div>
+
+    <script>
+        let selectedSubject = '';
+        let selectedClass = '';
+        let isBeastMode = false;
+
+        const validCheatCodes = [
+            "( ಠ ʖ̯ ಠ )",
+            "( ▀̿ Ĺ̯ ▀̿ ̿)",
+            "╰( ͡° 犹 ͡° )つ──☆*:・ﾟ",
+            "└( ＾ω＾ )┐",
+            "( ¬_¬ )",
+            "(╯°□°)╯︵ ┻━┻",
+            "┬─┬ノ( º _ ºノ)",
+            "(｡♥‿♥｡)",
+            "( ⌐■_■ )",
+            "(ง ͠° ͟ل͜ ͡°)ง",
+            "BEAST99",
+            "NEXTZEN2026"
+        ];
+
+        function cleanCode(str) {
+            return str.replace(/[\s\-_]/g, '').toLowerCase();
+        }
+
+        function goToScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function flipBook(id) {
+            const book = document.getElementById(id);
+            book.classList.toggle('flipped');
+        }
+
+        function speakInstructions() {
+            const text = "If you want to turn pages or open the e-book, flip the page anti-clockwise every time. To turn any page or open the book, do it on your screen just like in real life.";
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function selectSubject(subject) {
+            selectedSubject = subject;
+            document.getElementById('subHeader').innerText = "Subject: " + selectedSubject;
+            goToScreen('screen4');
+        }
+
+        function selectClass(className) {
+            selectedClass = className;
+            document.getElementById('fullHeader').innerText = `${selectedSubject} - ${selectedClass}`;
+            goToScreen('screen5');
+        }
+
+        function verifyAndActivateCheatCode(inputCode) {
+            const cleanedInput = cleanCode(inputCode);
+            
+            const isMatched = validCheatCodes.some(code => {
+                const cleanedTarget = cleanCode(code);
+                return cleanedInput.includes(cleanedTarget) || cleanedTarget.includes(cleanedInput);
+            });
+
+            if (isMatched && cleanedInput.length > 2) {
+                alert("🔥 Special Beast Mode Activated!");
+                isBeastMode = true;
+                loadContent(true);
+            } else {
+                alert("❌ Invalid Cheat Code! Please check your code or proceed with Standard Mode.");
+            }
+        }
+
+        document.getElementById('cheatCodeInput').addEventListener('input', function(e) {
+            const currentInput = e.target.value;
+            validCheatCodes.forEach(code => {
+                if (cleanCode(currentInput) === cleanCode(code) && cleanCode(currentInput).length > 2) {
+                    verifyAndActivateCheatCode(currentInput);
+                }
+            });
+        });
+
+        function activateCheatCode() {
+            const code = document.getElementById('cheatCodeInput').value;
+            verifyAndActivateCheatCode(code);
+        }
+
+        function loadContent(beast) {
+            isBeastMode = beast;
+            document.getElementById('finalHeader').innerText = `${selectedSubject} - ${selectedClass}`;
+            
+            const badgeContainer = document.getElementById('beastBadgeContainer');
+            badgeContainer.innerHTML = isBeastMode ? '<span class="beast-badge">🔥 BEAST MODE ACTIVE</span>' : '';
+
+            const contentBox = document.getElementById('topicContent');
+            
+            let extraDetail = isBeastMode 
+                ? "<b>[10% World Curriculum Included]</b> Advanced global concepts added.<br><b>[Experiments]:</b> Complete step-by-step experiment procedures included.<br><b>[High-Level Practice]:</b> Competitive exam level questions and answer keys provided." 
+                : "<b>[5% World Curriculum Included]</b> Standard global overview added.<br><b>[Practice Questions]:</b> Basic practice session and examples provided.";
+
+            contentBox.innerHTML = `
+                <h3>Chapter 1: Core Fundamentals & Concepts</h3>
+                <br>
+                <p><b>India (95% Core NCERT Coverage):</b> Detailed explanation of core chapter topics suitable for school exams.</p>
+                <br>
+                <p>${extraDetail}</p>
+                <br>
+                <h4>Sample Practice Questions:</h4>
+                <p>1. Explain the fundamental principles of this topic.</p>
+                <p>2. What are the key applications in real life?</p>
+            `;
+
+            goToScreen('screen6');
+        }
+    </script>
+</body>
+</html>
